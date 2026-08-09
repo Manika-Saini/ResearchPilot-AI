@@ -32,3 +32,4 @@ analyze, and interact with research papers.
 - Flashcard generation
 - Research notes
 - User authentication
+
