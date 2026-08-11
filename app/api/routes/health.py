@@ -1,4 +1,9 @@
-from fastapi import APIRouter
+from fastapi import APIRouter, Depends
+from sqlalchemy import text
+from sqlalchemy.orm import Session
+
+from app.database.dependencies import get_db
+
 
 router = APIRouter()
 
@@ -6,6 +11,24 @@ router = APIRouter()
 @router.get("/health")
 def health_check():
     return {
-        "status": "healthy",
-        "service": "ResearchPilot AI"
+        "status": "healthy"
     }
+
+
+@router.get("/health/db")
+def database_health_check(
+    db: Session = Depends(get_db)
+):
+    try:
+        db.execute(text("SELECT 1"))
+
+        return {
+            "status": "healthy",
+            "database": "connected"
+        }
+
+    except Exception:
+        return {
+            "status": "unhealthy",
+            "database": "disconnected"
+        }
